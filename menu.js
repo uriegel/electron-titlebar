@@ -1,4 +1,5 @@
 import { setHiddenCallback } from "./index.js"
+const electron = window.require('electron')
 
 window.onRename = () => {
     alert("Rename")
@@ -16,12 +17,12 @@ window.onMove = () => {
     console.log("Move Files")
 }
 
+window.onClose = () => close()
+
 window.onHidden = isChecked => {
     console.log(`Show hidden ${isChecked}`)
 }
 
 window.setHidden = mi => setHiddenCallback(isChecked => mi.isChecked = isChecked)
 
-window.onDevTools = isChecked => {
-    console.log(`Dev tools ${isChecked}`)
-}
+window.onDevTools = () => electron.ipcRenderer.send("openDevTools")

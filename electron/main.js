@@ -1,30 +1,31 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 
 const createWindow = () => {    
     const bounds = { 
         width: 800,
         height: 600,
+        show: false,
+        frame: false,
+        webPreferences: {
+            nodeIntegration: true,
+            allowRunningInsecureContent: true,
+            contextIsolation: false
+        }      
     } 
-    //bounds.frame = false
-    bounds.show = false 
-    bounds.webPreferences = {
-        nodeIntegration: true,
-        allowRunningInsecureContent: true
-    }        
     
     win = new BrowserWindow(bounds)   
 //        win.maximize()
 
-    // electron.ipcMain.on("openDevTools",  (evt, arg) => win.webContents.openDevTools())
-    // electron.ipcMain.on("fullscreen",  (evt, arg) => win.setFullScreen(!win.isFullScreen()))
-    // electron.ipcMain.on("minimize",  (evt, arg) => win.minimize())
-    // electron.ipcMain.on("maximize",  (evt, arg) => {
-    // if (win.isMaximized())
-    //     win.restore()
-    // else
-    //     win.maximize()  
-    // })
-    //electron.ipcMain.on("close",  (evt, arg) => stop(win.webContents))
+    ipcMain.on("openDevTools",  (evt, arg) => win.webContents.openDevTools())
+    ipcMain.on("fullscreen",  (evt, arg) => win.setFullScreen(!win.isFullScreen()))
+    ipcMain.on("minimize",  (evt, arg) => win.minimize())
+    ipcMain.on("maximize",  (evt, arg) => {
+    if (win.isMaximized())
+        win.restore()
+    else
+        win.maximize()  
+    })
+    
     win.once('ready-to-show', () => { 
         win.show() 
     }) 
