@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <title>Menubar</title>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+
+    <body>
+        <div class="root">
+            <menubar-mainmenu automode=false>
+                <menubar-submenu header="_Datei">
+                    <menubar-menuitem text="_Umbenennen" action="onRename"></menubar-menuitem>
+                    <menubar-menuitem text="Er_weitertes Umbenennen" action="onExtendedRename"></menubar-menuitem>
+                    <menubar-separator></menubar-separator>
+                    <menubar-menuitem text="_Kopieren" action="onCopy"></menubar-menuitem>
+                    <menubar-menuitem text="_Verschieben" action="onMove"></menubar-menuitem>
+                    <menubar-menuitem text="_Löschen"></menubar-menuitem>
+                    <menubar-separator></menubar-separator>
+                    <menubar-menuitem text="_Ordner anlegen"></menubar-menuitem>
+                    <menubar-separator></menubar-separator>
+                    <menubar-menuitem text="_Eigenschaften"></menubar-menuitem>
+                    <menubar-menuitem text="Öffnen _mit"></menubar-menuitem>
+                    <menubar-separator></menubar-separator>
+                    <menubar-menuitem text="_Beenden"></menubar-menuitem>
+                </menubar-submenu>
+                <menubar-submenu header="_Navigation">
+                    <menubar-menuitem text="_Favoriten"></menubar-menuitem>
+                    <menubar-menuitem text="_Gleichen Ordner öffnen"></menubar-menuitem>
+                </menubar-submenu>
+                <menubar-submenu header="_Selektion">
+                    <menubar-menuitem text="_Alles"></menubar-menuitem>
+                    <menubar-menuitem text="_Selektion entfernen"></menubar-menuitem>
+                </menubar-submenu>
+                <menubar-submenu header="_Ansicht">
+                    <menubar-menuitem text="_Versteckte Dateien" checkbox action="onHidden" setChecked="setHidden"></menubar-menuitem>
+                    <menubar-menuitem text="_Aktualisieren"></menubar-menuitem>
+                    <menubar-separator></menubar-separator>
+                    <menubar-menuitem text="_Vorschau"></menubar-menuitem>
+                    <menubar-separator></menubar-separator>
+                    <menubar-menuitem text="Themen"></menubar-menuitem>
+                    <menubar-separator></menubar-separator>
+                    <menubar-menuitem text="_Zoomlevel"></menubar-menuitem>
+                    <menubar-menuitem text="_Vollbild"></menubar-menuitem>
+                    <menubar-separator></menubar-separator>
+                    <menubar-menuitem text="_Entwicklerwerkzeuge" checkbox action="onDevTools"></menubar-menuitem>
+                    
+                </menubar-submenu>
+            </menubar-mainmenu>
+            <div> 
+                <h1>Menubar</h1>
+                <p>
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                </p>
+                <p>
+                    <button>Erster</button>
+                    <button>Zweiter</button>
+                    <button>Dritter</button>
+                </p>
+            </div>
+        </div>
+
+        <script type="module" src="index.js"></script>
+    </body>
+</html>
