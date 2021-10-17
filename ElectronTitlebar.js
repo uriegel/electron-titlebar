@@ -10,7 +10,7 @@ class ElectronTitlebar extends HTMLElement {
             <style>
                 :host {
                     --electron-titlebar-color: black;
-                    --electron-titlebar-background-color: white;
+                    --electron-titlebar-background-color: #eee;
                     --electron-titlebar-button-hover-color: lightgray;
                     --electron-titlebar-height: 30px;
                 }
