@@ -17,6 +17,13 @@ window.onMove = () => {
     console.log("Move Files")
 }
 
+window.onDarkTheme = isChecked => {
+    if (isChecked)
+        document.body.classList.add("darkTheme")
+    else
+        document.body.classList.remove("darkTheme")
+}
+
 window.onClose = () => close()
 
 window.onHidden = isChecked => {

@@ -1,7 +1,20 @@
-
 class Menubar extends HTMLElement {
     constructor() {
         super()
+
+        var style = document.createElement("style")
+        document.head.appendChild(style)
+        style.sheet.insertRule(`:root {
+            --menubar-color: black;
+            --menubar-background-color: white;
+            --menubar-hover-color: lightblue;
+            --menubar-selected-color: white;
+            --menubar-selected-background-color: blue;
+            --menubar-border-color: lightgray;
+            --menubar-separator-color: lightgray;
+            --menubar-shadow-color: rgba(0, 0, 0, 0.2);
+        }`)
+
         this.isAccelerated = false
         this.isKeyboardActivated = false
         this.selectedIndex = -1
@@ -32,14 +45,18 @@ class Menubar extends HTMLElement {
         const items = Array.from(document.querySelectorAll('menubar-submenu'))
         this.itemCount = items.length
         items.forEach((n, i) => n.setAttribute("index", i))
-        const headers = items.map(n => n.getAttribute("header"))
-        console.log("headers", headers)
-        // TODO parse mnemonics with indexes
+        this.mnemonics = items.map((n, i) => {
+            const header = n.getAttribute("header")
+            const pos = header.indexOf('_')
+            const key = pos != -1 ? header[pos + 1].toLowerCase() : null
+            return ({key, index: i})
+        })
 
         this.menubar = this.shadowRoot.querySelector('ul')
         this.autoMode = this.getAttribute("automode") == "true"
         if (this.autoMode)
             this.menubar.classList.add("invisible")
+        this.getShortcuts()
     }
 
     get isAccelerated()  {
@@ -81,15 +98,6 @@ class Menubar extends HTMLElement {
                 evt.preventDefault()
                 evt.stopPropagation()
             }            
-            if (this.isKeyboardActivated) {
-            //    const hits = parseShortcuts(this.shortcuts, evt.key)
-            //     if (hits.length > 0) {
-            //         this.menuState.selectedIndex = hits[0]
-            //         this.menuState.isKeyboardActivated = false
-            //         evt.preventDefault()
-            //         evt.stopPropagation()
-            //     }
-            }
             if (evt.which == 18 && !evt.repeat && evt.code == "AltLeft") { // Alt 
                 if (this.isAccelerated) {
                     this.closeMenu()
@@ -107,6 +115,8 @@ class Menubar extends HTMLElement {
             }
             else if (evt.which == 27) // ESC
                 this.closeMenu()
+            else
+                this.checkShortcut(evt)
         }, true)
         document.addEventListener("keyup", evt => {
             if (evt.which == 18) { // Alt 
@@ -158,6 +168,16 @@ class Menubar extends HTMLElement {
                         break
                     }
                 default: {
+                    if (this.isAccelerated) {
+                        const items = this.mnemonics.filter(n => n.key == evt.key).map(n => n.index)
+                        if (items.length > 0) {
+                            this.selectedIndex = items[0]
+                            this.isKeyboardActivated = false
+                            evt.preventDefault()
+                            evt.stopPropagation()
+                            break
+                        }
+                    }
                     const items = Array.from(document.querySelectorAll('menubar-submenu'))
                     items.forEach(n => n.onKeyDown(evt))
                 }
@@ -183,6 +203,56 @@ class Menubar extends HTMLElement {
         this.isKeyboardActivated = false
         this.isAccelerated = false
     }
+
+    getShortcuts() {
+        const getShortcut = text => {
+
+            const getKey = k => k.length == 1 ? k.toLowerCase() : k
+
+            if (!text)
+                return  null
+            var parts = text.split("+")
+            if (parts.length == 1)
+                return {
+                    ctrl: false,
+                    shift: false,
+                    alt: false,
+                    val: getKey(parts[0])
+                }
+            else
+                return {
+                    ctrl: parts[0] == "Strg" || parts[0] == "Ctrl",
+                    shift: parts[0] == "Shift",
+                    alt: parts[0] == "Alt",
+                    val: getKey(parts[1])
+                }
+        }
+
+        const items = Array.from(document.querySelectorAll('menubar-menuitem'))
+            .map(n => ({ shortcut: getShortcut(n.getAttribute("shortcut")), menuitem: n }))
+            .filter(n => n.shortcut)
+
+        this.shortcuts = new Map()
+        items.forEach(i => {
+            const list = this.shortcuts.get(i.shortcut.val)
+            if (list)
+                this.shortcuts.set(i.shortcut.val, [...list, i])
+            else
+                this.shortcuts.set(i.shortcut.val, [i])
+        })
+    }
+
+    checkShortcut(evt) {
+        const shortcuts = this.shortcuts.get(evt.key)
+        if (shortcuts) {
+            const shortcut = shortcuts.filter(n => n.shortcut.ctrl == evt.ctrlKey && n.shortcut.alt == evt.altKey)
+            if (shortcut.length == 1) {
+                shortcut[0].menuitem.executeCommand()
+                evt.preventDefault()
+                evt.stopPropagation()
+            }
+        }
+    }
 }
 
 class Submenu extends HTMLElement {
@@ -193,11 +263,6 @@ class Submenu extends HTMLElement {
         const template = document.createElement('template')
         template.innerHTML = ` 
             <style>
-                :host {
-                    --menubar-hover-color: lightblue;
-                    --menubar-selected-color: white;
-                    --menubar-selected-background-color: blue;
-                }            
                 #menubarItem {
                     float: left;
                     align-items: center;
@@ -306,12 +371,6 @@ class SubmenuList extends HTMLElement {
         const template = document.createElement('template')
         template.innerHTML = ` 
             <style>
-                :host {
-                    --menubar-color: black;
-                    --menubar-background-color: white;
-                    --menubar-border-color: lightgray;
-                    --menubar-shadow-color: rgba(0, 0, 0, 0.2);
-                }
                 #submenu {
                     color: var(--menubar-color);
                     background-color: var(--menubar-background-color);
@@ -434,11 +493,6 @@ class MenuItem extends HTMLElement {
         const template = document.createElement('template')
         template.innerHTML = ` 
             <style>
-                :host {
-                    --menubar-hover-color: lightblue;
-                    --menubar-selected-color: white;
-                    --menubar-selected-background-color: blue;
-                }            
                 .menuitemtext {
                     display: flex;
                 }
@@ -456,6 +510,10 @@ class MenuItem extends HTMLElement {
                 }                
                 .submenu-item.checkbox.is-checked .selector {
                     opacity: 1;
+                }
+                .submenu-item .spacer {
+                    flex-grow: 1;
+                    min-width: 20px;
                 }                
                 .accelerated-active.accelerated {
                     text-decoration: underline;
@@ -473,19 +531,11 @@ class MenuItem extends HTMLElement {
                     <div>
                         <span id="pretext"></span><span id="mnemonictext" class="accelerated"></span><span id="posttext"></span>
                     </div>
+                    <span class="spacer"> </span>
+                    <span id="shortcut"></span>
                 </div>
             </div>
         `
-
-    //     <div class="menuitemtext" v-if="menuState.accelerated && !separator">
-    //         <span class="selector" :class="{ 'isSelected': isSelected }">✓</span>
-    //         <div>
-    //             <span>{{pre}}</span><span class="accelerated">{{acc}}</span><span>{{post}}</span>
-    //         </div>
-    //         <span class="spacer"> </span>
-    //         <span v-if='item.accelerator'>{{item.accelerator.name}}</span>
-    //     </div>
-
 
         this.shadowRoot.appendChild(template.content.cloneNode(true))
         this.index = Number.parseInt(this.getAttribute("index"))
@@ -508,6 +558,8 @@ class MenuItem extends HTMLElement {
         this.mainmenu = this.getAttribute("mainmenu") == "true"        
         if (!this.mainmenu) 
             menuItem.classList.add("submenu-item")
+        const shortcut = this.shadowRoot.getElementById("shortcut")
+        shortcut.innerText = this.getAttribute("shortcut")
                          
         function getTextParts(text) {
             const pos = text.indexOf('_')
@@ -619,11 +671,9 @@ class Separator extends HTMLElement {
         const template = document.createElement('template')
         template.innerHTML = ` 
             <style>
-                :host {
-                    --menubar-separator-color: red;
-                }
-                #hr {
-                    border:solid var(--menubar-separator-color) 0.5px
+                hr {
+                    border:solid var(--menubar-separator-color) 0.5px;
+                    border-top-style: hidden;
                 }
             </style>
             <hr /> 
@@ -638,8 +688,5 @@ customElements.define('menubar-submenu-list', SubmenuList)
 customElements.define('menubar-menuitem', MenuItem)
 customElements.define('menubar-separator', Separator)
 
-// TODO Electron titlebar
-// TODO Mnemonics in main menu
-// TODO Shortcuts
-// TODO Submenu 
+// TODO Submenu zoom-level
 // TODO Resize event when automode

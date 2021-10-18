@@ -3,17 +3,21 @@ const electron = window.require('electron')
 class ElectronTitlebar extends HTMLElement {
     constructor() {
         super()
+        
+        var style = document.createElement("style")
+        document.head.appendChild(style)
+        style.sheet.insertRule(`:root {
+            --electron-titlebar-color: black;
+            --electron-titlebar-background-color: #eee;
+            --electron-titlebar-button-hover-color: lightgray;
+            --electron-titlebar-height: 30px;
+        }`)
+        
         this.attachShadow({ mode: 'open' })
 
         const template = document.createElement('template')
         template.innerHTML = ` 
             <style>
-                :host {
-                    --electron-titlebar-color: black;
-                    --electron-titlebar-background-color: #eee;
-                    --electron-titlebar-button-hover-color: lightgray;
-                    --electron-titlebar-height: 30px;
-                }
                 .titlebar {
                     display: flex;
                     color: var(--electron-titlebar-color);
