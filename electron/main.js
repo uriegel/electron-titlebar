@@ -14,9 +14,8 @@ const createWindow = () => {
     } 
     
     win = new BrowserWindow(bounds)   
-//        win.maximize()
 
-    ipcMain.on("openDevTools",  (evt, arg) => win.webContents.openDevTools())
+    ipcMain.on("openDevTools", (evt, arg) => win.webContents.openDevTools())
     ipcMain.on("fullscreen",  (evt, arg) => win.setFullScreen(!win.isFullScreen()))
     ipcMain.on("minimize",  (evt, arg) => win.minimize())
     ipcMain.on("maximize",  (evt, arg) => {
@@ -28,21 +27,12 @@ const createWindow = () => {
     
     win.once('ready-to-show', () => { 
         win.show() 
-    }) 
+    })
+    
+    win.on("focus", () => win.webContents.send("focus"))
+    win.on("blur", () => win.webContents.send("blur"))
 
     win.loadFile('index.html')
-
-    // win.on('maximize', () => {
-    //     const bounds = win.getBounds()
-    //     settings.set("window-bounds", bounds as any)
-    //     settings.set("isMaximized", true)
-    // })
-
-    // win.on('unmaximize', () => {
-    //     settings.set("isMaximized", false)
-    // })    
-
-    // win.on("closed", () => win = null)    
 }
 
 app.removeAllListeners('ready')
