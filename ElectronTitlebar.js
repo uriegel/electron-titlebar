@@ -3,7 +3,7 @@ const electron = window.require('electron')
 class ElectronTitlebar extends HTMLElement {
     constructor() {
         super()
-        
+
         var style = document.createElement("style")
         document.head.appendChild(style)
         style.sheet.insertRule(`:root {
@@ -91,14 +91,16 @@ class ElectronTitlebar extends HTMLElement {
         this.minimize = this.shadowRoot.getElementById("minimize")
         this.maximize = this.shadowRoot.getElementById("maximize")
         this.close = this.shadowRoot.getElementById("close")
+
+        this.titlebar.classList.add("focused")
+        electron.ipcRenderer.on("focus", () => this.titlebar.classList.add("focused"))
+        electron.ipcRenderer.on("blur", () => this.titlebar.classList.remove("focused"))
     }
 
     connectedCallback() {
         this.minimize.addEventListener("click", () => electron.ipcRenderer.send("minimize"))
         this.maximize.addEventListener("click", () => electron.ipcRenderer.send("maximize"))
         this.close.addEventListener("click", () => close())
-        electron.ipcRenderer.on("focus", () => this.titlebar.classList.add("focused"))
-        electron.ipcRenderer.on("blur", () => this.titlebar.classList.remove("focused"))
     }
 }
 
