@@ -29,6 +29,7 @@ class Menubar extends HTMLElement {
                     list-style: none;
                     padding: 0;
                     margin: 0;
+                    height: 100%;
                 }
                 .invisible {
                     display: none;
@@ -283,6 +284,7 @@ class Submenu extends HTMLElement {
                 #submenu {
                     display: none;
                     position: absolute;
+                    z-index: 10000;
                 }
                 .selected #submenu {
                     display: block;
@@ -496,7 +498,7 @@ class MenuItem extends HTMLElement {
                 .menuitemtext {
                     display: flex;
                 }
-                #menuitem.selected {
+                #menuItem.selected {
                     background-color: var(--menubar-selected-background-color);
                     color: var(--menubar-selected-color);
                 }
