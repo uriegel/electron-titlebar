@@ -520,6 +520,9 @@ class MenuItem extends HTMLElement {
                 }
                 #menuItem {
                     padding: 2px 5px;
+                    align-items: center;
+                    height: 100%;
+                    display: flex;                    
                 }
                 #menuItem.submenu-item {
                     padding: 5px 20px 5px 0px;
