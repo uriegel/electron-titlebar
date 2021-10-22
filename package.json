@@ -1,6 +1,6 @@
 {
   "name": "web-electron-titlebar",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A html/javascript titlebar web component for electron without native window frame",
   "main": "dist/index.js",
   "module": "src/index.js",
@@ -29,6 +29,9 @@
   },
   "homepage": "https://github.com/uriegel/electron-titlebar#readme",
   "devDependencies": {
-    "electron": "^15.2.0"
+    "electron": "^15.2.0",
+    "rimraf": "^3.0.2",
+    "webpack": "^5.59.1",
+    "webpack-cli": "^4.9.1"
   }
 }
