@@ -1,20 +1,26 @@
 {
-  "name": "electron-titlebar",
-  "version": "1.0.0",
-  "description": "Titlebar for electron app without frame",
-  "main": "electron/main.js",
+  "name": "web-electron-titlebar",
+  "version": "0.0.1",
+  "description": "A html/javascript titlebar web component for electron without native window frame",
+  "main": "dist/index.js",
+  "module": "src/index.js",
+  "directories": {
+    "src": "src"
+  },
   "scripts": {
-    "start": "electron ."
+    "clean": "rimraf dist",
+    "test": "electron ./electron/main.js",
+    "build": "npm run clean && webpack --mode production",
+    "publish": "npm publish"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/uriegel/electron-titlebar.git"
   },
   "keywords": [
-    "\"javascript\"",
-    "\"web",
-    "component\"",
-    "\"electron\""
+    "javascript",
+    "web-components",
+    "electron"
   ],
   "author": "Uwe Riegel",
   "license": "MIT",

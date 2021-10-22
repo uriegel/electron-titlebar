@@ -12,7 +12,7 @@
             "envFile": "${workspaceFolder}/.vscode/launch.env",
             "runtimeExecutable": "npm",
             "runtimeArgs": [
-                "run-script", "start"
+                "run-script", "test"
             ],
             "outputCapture": "std",
             "port": 5858
