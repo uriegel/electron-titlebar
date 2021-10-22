@@ -1,5 +1,4 @@
 import './ElectronTitlebar.js'
-import './components/Menubar.js'
 import './menu.js'
 console.log("Started")
 
