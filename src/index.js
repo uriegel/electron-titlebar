@@ -1,1 +1,1 @@
-export * from './ElectronTitlebar'
+export * from './ElectronTitlebar.js'

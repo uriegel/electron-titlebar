@@ -1,6 +1,6 @@
 const electron = window.require('electron')
 
-class ElectronTitlebar extends HTMLElement {
+export class ElectronTitlebar extends HTMLElement {
     constructor() {
         super()
 

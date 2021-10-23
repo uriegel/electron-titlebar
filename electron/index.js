@@ -1,4 +1,4 @@
-import '../src/ElectronTitlebar.js'
+import '../src/index.js'
 import './menu.js'
 console.log("Started")
 
