@@ -29,10 +29,14 @@ export class ElectronTitlebar extends HTMLElement {
                 #titlebar.focused {
                     border-top: 1px solid var(--electron-titlebar-focused-color);
                 }
+                #titlebar.none {
+                    border-top: none;
+                    height: auto;
+                }
                 #icon {
                     height: var(--electron-titlebar-height);
                 }
-                .dragregion {
+                #dragregion {
                     flex-grow: 1;
                     text-align: center;
                     vertical-align: middle;
@@ -40,6 +44,9 @@ export class ElectronTitlebar extends HTMLElement {
                     -webkit-app-region: drag;
                     display: flex;
                     align-items: center;   
+                }
+                #dragregion.hidden {
+                    display: none;
                 }
                 #title {
                     flex-grow: 1;   
@@ -68,12 +75,15 @@ export class ElectronTitlebar extends HTMLElement {
                 .button>span.dash {
                     vertical-align: sub;
                     margin-top: 0px;
-                }                             
+                }
+                .hidden {
+                    display: none;
+                }
             </style>
             <div id="titlebar">
                 <img id="icon">
                 <slot></slot>
-                <div class="dragregion">
+                <div id="dragregion">
                     <span id="title"></span>
                 </div>
                 <div id="minimize" class="button" @click="onMinimize"><span class="dash">&#x2012;</span></div>
@@ -95,12 +105,38 @@ export class ElectronTitlebar extends HTMLElement {
         this.titlebar.classList.add("focused")
         electron.ipcRenderer.on("focus", () => this.titlebar.classList.add("focused"))
         electron.ipcRenderer.on("blur", () => this.titlebar.classList.remove("focused"))
+        const notitlebar = this.getAttribute("no-titlebar")
+        if (notitlebar)
+            this.disableTitlebar()
+    }
+
+    static get observedAttributes() {
+        return ['no-titlebar']
+    }
+
+    attributeChangedCallback(attributeName, oldValue, newValue) {
+        switch (attributeName) {
+            case "no-titlebar":
+                this.disableTitlebar()
+                break
+        }
     }
 
     connectedCallback() {
         this.minimize.addEventListener("click", () => electron.ipcRenderer.send("minimize"))
         this.maximize.addEventListener("click", () => electron.ipcRenderer.send("maximize"))
         this.close.addEventListener("click", () => close())
+    }
+
+    disableTitlebar() {
+        const icon = this.shadowRoot.getElementById("icon")
+        const dragregion = this.shadowRoot.getElementById("dragregion")
+        icon.classList.add("hidden")
+        dragregion.classList.add("hidden")
+        this.minimize.classList.add("hidden")
+        this.maximize.classList.add("hidden")
+        this.close.classList.add("hidden")
+        this.titlebar.classList.add("none")
     }
 }
 
