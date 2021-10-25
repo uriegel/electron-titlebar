@@ -97,7 +97,7 @@ export class ElectronTitlebar extends HTMLElement {
         icon.src = this.getAttribute("icon")
         const title = this.shadowRoot.getElementById("title")
         this.titlebar = this.shadowRoot.getElementById("titlebar")
-        title.innerText = this.getAttribute("title")
+        title.innerText = this.getAttribute("window-title")
         this.minimize = this.shadowRoot.getElementById("minimize")
         this.maximize = this.shadowRoot.getElementById("maximize")
         this.close = this.shadowRoot.getElementById("close")
