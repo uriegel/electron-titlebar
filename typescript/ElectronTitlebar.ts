@@ -1,18 +1,27 @@
-const electron = window.require('electron');
+const electron = window.require('electron')
+
 export class ElectronTitlebar extends HTMLElement {
+    private titlebar: HTMLElement
+    private minimize: HTMLElement
+    private maximize: HTMLElement
+    private close: HTMLElement
+
     constructor() {
-        super();
-        var style = document.createElement("style");
-        document.head.appendChild(style);
-        style.sheet.insertRule(`:root {
+        super()
+
+        var style = document.createElement("style")
+        document.head.appendChild(style)
+        style.sheet!.insertRule(`:root {
             --electron-titlebar-color: black;
             --electron-titlebar-background-color: #eee;
             --electron-titlebar-button-hover-color: lightgray;
             --electron-titlebar-focused-color: blue;
             --electron-titlebar-height: 30px;
-        }`);
-        this.attachShadow({ mode: 'open' });
-        const template = document.createElement('template');
+        }`)
+        
+        this.attachShadow({ mode: 'open' })
+
+        const template = document.createElement('template')
         template.innerHTML = ` 
             <style>
                 #titlebar {
@@ -86,47 +95,54 @@ export class ElectronTitlebar extends HTMLElement {
                 <div id="maximize" class="button" @click="onMaximize"><span>&#9744;</span></div>                
                 <div id="close" class="button close"><span>&#10005;</span></div>
             </div>
-        `;
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
-        const icon = this.shadowRoot.getElementById("icon");
-        icon.src = this.getAttribute("icon") ?? "";
-        const title = this.shadowRoot.getElementById("title");
-        this.titlebar = this.shadowRoot.getElementById("titlebar");
-        title.innerText = this.getAttribute("window-title") ?? "";
-        this.minimize = this.shadowRoot.getElementById("minimize");
-        this.maximize = this.shadowRoot.getElementById("maximize");
-        this.close = this.shadowRoot.getElementById("close");
-        this.titlebar.classList.add("focused");
-        electron.ipcRenderer.on("focus", () => this.titlebar.classList.add("focused"));
-        electron.ipcRenderer.on("blur", () => this.titlebar.classList.remove("focused"));
-        const notitlebar = this.getAttribute("no-titlebar");
+        `
+        this.shadowRoot!.appendChild(template.content.cloneNode(true))
+
+        const icon = this.shadowRoot!.getElementById("icon") as HTMLSourceElement
+        icon.src = this.getAttribute("icon") ?? ""
+        const title = this.shadowRoot!.getElementById("title")!
+        this.titlebar = this.shadowRoot!.getElementById("titlebar")!
+        title.innerText = this.getAttribute("window-title") ?? ""
+        this.minimize = this.shadowRoot!.getElementById("minimize")!
+        this.maximize = this.shadowRoot!.getElementById("maximize")!
+        this.close = this.shadowRoot!.getElementById("close")!
+
+        this.titlebar.classList.add("focused")
+        electron.ipcRenderer.on("focus", () => this.titlebar.classList.add("focused"))
+        electron.ipcRenderer.on("blur", () => this.titlebar.classList.remove("focused"))
+        const notitlebar = this.getAttribute("no-titlebar")
         if (notitlebar)
-            this.disableTitlebar();
+            this.disableTitlebar()
     }
+
     static get observedAttributes() {
-        return ['no-titlebar'];
+        return ['no-titlebar']
     }
-    attributeChangedCallback(attributeName) {
+
+    attributeChangedCallback(attributeName: string) {
         switch (attributeName) {
             case "no-titlebar":
-                this.disableTitlebar();
-                break;
+                this.disableTitlebar()
+                break
         }
     }
+
     connectedCallback() {
-        this.minimize.addEventListener("click", () => electron.ipcRenderer.send("minimize"));
-        this.maximize.addEventListener("click", () => electron.ipcRenderer.send("maximize"));
-        this.close.addEventListener("click", () => close());
+        this.minimize.addEventListener("click", () => electron.ipcRenderer.send("minimize"))
+        this.maximize.addEventListener("click", () => electron.ipcRenderer.send("maximize"))
+        this.close.addEventListener("click", () => close())
     }
+
     disableTitlebar() {
-        const icon = this.shadowRoot.getElementById("icon");
-        const dragregion = this.shadowRoot.getElementById("dragregion");
-        icon?.classList.add("hidden");
-        dragregion?.classList.add("hidden");
-        this.minimize.classList.add("hidden");
-        this.maximize.classList.add("hidden");
-        this.close.classList.add("hidden");
-        this.titlebar.classList.add("none");
+        const icon = this.shadowRoot!.getElementById("icon")
+        const dragregion = this.shadowRoot!.getElementById("dragregion")
+        icon?.classList.add("hidden")
+        dragregion?.classList.add("hidden")
+        this.minimize.classList.add("hidden")
+        this.maximize.classList.add("hidden")
+        this.close.classList.add("hidden")
+        this.titlebar.classList.add("none")
     }
 }
-customElements.define('electron-titlebar', ElectronTitlebar);
+
+customElements.define('electron-titlebar', ElectronTitlebar)

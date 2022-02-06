@@ -1,3 +1,4 @@
 .vscode
 electron
 dist
+typescript
