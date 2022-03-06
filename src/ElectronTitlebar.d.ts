@@ -7,5 +7,6 @@ export declare class ElectronTitlebar extends HTMLElement {
     static get observedAttributes(): string[];
     attributeChangedCallback(attributeName: string): void;
     connectedCallback(): void;
+    setFocused(hasFocus: boolean): void;
     disableTitlebar(): void;
 }

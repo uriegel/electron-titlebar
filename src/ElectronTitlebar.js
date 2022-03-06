@@ -1,4 +1,3 @@
-const electron = window.require('electron');
 export class ElectronTitlebar extends HTMLElement {
     constructor() {
         super();
@@ -97,8 +96,6 @@ export class ElectronTitlebar extends HTMLElement {
         this.maximize = this.shadowRoot.getElementById("maximize");
         this.close = this.shadowRoot.getElementById("close");
         this.titlebar.classList.add("focused");
-        electron.ipcRenderer.on("focus", () => this.titlebar.classList.add("focused"));
-        electron.ipcRenderer.on("blur", () => this.titlebar.classList.remove("focused"));
         const notitlebar = this.getAttribute("no-titlebar");
         if (notitlebar)
             this.disableTitlebar();
@@ -114,9 +111,13 @@ export class ElectronTitlebar extends HTMLElement {
         }
     }
     connectedCallback() {
-        this.minimize.addEventListener("click", () => electron.ipcRenderer.send("minimize"));
-        this.maximize.addEventListener("click", () => electron.ipcRenderer.send("maximize"));
         this.close.addEventListener("click", () => close());
+    }
+    setFocused(hasFocus) {
+        if (hasFocus)
+            this.titlebar.classList.add("focused");
+        else
+            this.titlebar.classList.remove("focused");
     }
     disableTitlebar() {
         const icon = this.shadowRoot.getElementById("icon");

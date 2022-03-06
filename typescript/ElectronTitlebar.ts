@@ -1,5 +1,3 @@
-const electron = window.require('electron')
-
 export class ElectronTitlebar extends HTMLElement {
     private titlebar: HTMLElement
     private minimize: HTMLElement
@@ -108,8 +106,6 @@ export class ElectronTitlebar extends HTMLElement {
         this.close = this.shadowRoot!.getElementById("close")!
 
         this.titlebar.classList.add("focused")
-        electron.ipcRenderer.on("focus", () => this.titlebar.classList.add("focused"))
-        electron.ipcRenderer.on("blur", () => this.titlebar.classList.remove("focused"))
         const notitlebar = this.getAttribute("no-titlebar")
         if (notitlebar)
             this.disableTitlebar()
@@ -128,9 +124,14 @@ export class ElectronTitlebar extends HTMLElement {
     }
 
     connectedCallback() {
-        this.minimize.addEventListener("click", () => electron.ipcRenderer.send("minimize"))
-        this.maximize.addEventListener("click", () => electron.ipcRenderer.send("maximize"))
         this.close.addEventListener("click", () => close())
+    }
+
+    setFocused(hasFocus: boolean) { 
+        if (hasFocus)
+            this.titlebar.classList.add("focused")
+        else
+            this.titlebar.classList.remove("focused")
     }
 
     disableTitlebar() {
