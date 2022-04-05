@@ -96,8 +96,6 @@ export class ElectronTitlebar extends HTMLElement {
         `
         this.shadowRoot!.appendChild(template.content.cloneNode(true))
 
-        const icon = this.shadowRoot!.getElementById("icon") as HTMLSourceElement
-        icon.src = this.getAttribute("icon") ?? ""
         const title = this.shadowRoot!.getElementById("title")!
         this.titlebar = this.shadowRoot!.getElementById("titlebar")!
         title.innerText = this.getAttribute("window-title") ?? ""
@@ -109,10 +107,14 @@ export class ElectronTitlebar extends HTMLElement {
         const notitlebar = this.getAttribute("no-titlebar")
         if (notitlebar)
             this.disableTitlebar()
+        else {
+            const icon = this.shadowRoot!.getElementById("icon") as HTMLSourceElement
+            icon.src = this.getAttribute("icon") ?? ""
+        }    
     }
 
     static get observedAttributes() {
-        return ['no-titlebar']
+        return ['no-titlebar', 'icon']
     }
 
     attributeChangedCallback(attributeName: string) {
@@ -120,6 +122,10 @@ export class ElectronTitlebar extends HTMLElement {
             case "no-titlebar":
                 this.disableTitlebar()
                 break
+            case "icon":
+                const icon = this.shadowRoot!.getElementById("icon") as HTMLSourceElement
+                icon.src = this.getAttribute("icon") ?? ""
+                break;
         }
     }
 
