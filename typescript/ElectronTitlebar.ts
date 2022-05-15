@@ -49,7 +49,7 @@ export class ElectronTitlebar extends HTMLElement {
                     display: flex;
                     align-items: center;   
                 }
-                #dragregion.hidden {
+                #dragregion.forceHidden {
                     display: none;
                 }
                 #title {
