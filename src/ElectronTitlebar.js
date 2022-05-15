@@ -75,7 +75,7 @@ export class ElectronTitlebar extends HTMLElement {
                     display: none;
                 }
                 .forceHidden {
-                    display: none!;
+                    display: none;!
                 }
             </style>
             <div id="titlebar">
