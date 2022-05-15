@@ -81,8 +81,8 @@ export class ElectronTitlebar extends HTMLElement {
                 <div id="dragregion">
                     <span id="title"></span>
                 </div>
-                <div id="minimize" class="button" @click="onMinimize"><span class="dash">&#x2012;</span></div>
-                <div id="maximize" class="button" @click="onMaximize"><span>&#9744;</span></div>                
+                <div id="minimize" class="button"><span class="dash">&#x2012;</span></div>
+                <div id="maximize" class="button"><span>&#9744;</span></div>                
                 <div id="close" class="button close"><span>&#10005;</span></div>
             </div>
         `;
@@ -118,6 +118,8 @@ export class ElectronTitlebar extends HTMLElement {
     }
     connectedCallback() {
         this.close.addEventListener("click", () => close());
+        this.maximize.addEventListener("click", () => this.dispatchEvent(new CustomEvent('onMaximize')));
+        this.minimize.addEventListener("click", () => this.dispatchEvent(new CustomEvent('onMinimize')));
     }
     setFocused(hasFocus) {
         if (hasFocus)
