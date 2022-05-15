@@ -99,7 +99,8 @@ export class ElectronTitlebar extends HTMLElement {
         this.restore = this.shadowRoot.getElementById("restore");
         this.close = this.shadowRoot.getElementById("close");
         this.titlebar.classList.add("focused");
-        if (this.getAttribute("no-titlebar"))
+        const notitlebar = this.getAttribute("no-titlebar");
+        if (notitlebar)
             this.showTitlebar(false);
         else {
             const icon = this.shadowRoot.getElementById("icon");
@@ -137,7 +138,8 @@ export class ElectronTitlebar extends HTMLElement {
         this.addClassList(this.maximize, "hidden", isMaximized);
     }
     showTitlebar(show) {
-        if (!show || !this.getAttribute("no-titlebar")) {
+        const notitlebar = this.getAttribute("no-titlebar");
+        if (!show || !notitlebar) {
             const icon = this.shadowRoot.getElementById("icon");
             const dragregion = this.shadowRoot.getElementById("dragregion");
             this.addClassList(icon, "forceHidden", !show);

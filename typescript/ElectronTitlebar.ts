@@ -110,7 +110,8 @@ export class ElectronTitlebar extends HTMLElement {
         this.close = this.shadowRoot!.getElementById("close")!
 
         this.titlebar.classList.add("focused")
-        if (this.getAttribute("no-titlebar"))
+        const notitlebar = this.getAttribute("no-titlebar")
+        if (notitlebar)
             this.showTitlebar(false)
         else {
             const icon = this.shadowRoot!.getElementById("icon") as HTMLSourceElement
@@ -154,7 +155,8 @@ export class ElectronTitlebar extends HTMLElement {
     }
 
     showTitlebar(show: boolean) {
-        if (!show || !this.getAttribute("no-titlebar")) {
+        const notitlebar = this.getAttribute("no-titlebar")
+        if (!show || !notitlebar) {
             const icon = this.shadowRoot!.getElementById("icon")
             const dragregion = this.shadowRoot!.getElementById("dragregion")
             this.addClassList(icon, "forceHidden", !show)
