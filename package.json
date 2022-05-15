@@ -10,7 +10,7 @@
   "scripts": {
     "typescript": "tsc -p typescript",
     "typescript-test": "tsc -p electron",
-    "test": "electron ./electron/main.js",
+    "test": "npm run typescript && npm run typescript-test && electron ./electron/main.js",
     "do publish test": "npm run typescript && npm publish --dry-run",
     "do publish": "npm run typescript && npm publish"
   },
