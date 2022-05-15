@@ -134,8 +134,8 @@ export class ElectronTitlebar extends HTMLElement {
             this.titlebar.classList.remove("focused");
     }
     setMaximized(isMaximized) {
-        this.addClassList(this.restore, "hidden", isMaximized);
-        this.addClassList(this.maximize, "hidden", !isMaximized);
+        this.addClassList(this.restore, "hidden", !isMaximized);
+        this.addClassList(this.maximize, "hidden", isMaximized);
     }
     showTitlebar(show) {
         const icon = this.shadowRoot.getElementById("icon");

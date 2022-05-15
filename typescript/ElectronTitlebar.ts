@@ -150,8 +150,8 @@ export class ElectronTitlebar extends HTMLElement {
     }
 
     setMaximized(isMaximized: boolean) {
-        this.addClassList(this.restore, "hidden", isMaximized)
-        this.addClassList(this.maximize, "hidden", !isMaximized)
+        this.addClassList(this.restore, "hidden", !isMaximized)
+        this.addClassList(this.maximize, "hidden", isMaximized)
     }
 
     showTitlebar(show: boolean) {
