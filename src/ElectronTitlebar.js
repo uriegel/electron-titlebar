@@ -99,8 +99,7 @@ export class ElectronTitlebar extends HTMLElement {
         this.restore = this.shadowRoot.getElementById("restore");
         this.close = this.shadowRoot.getElementById("close");
         this.titlebar.classList.add("focused");
-        const notitlebar = this.getAttribute("no-titlebar");
-        if (notitlebar)
+        if (this.getAttribute("no-titlebar"))
             this.showTitlebar(false);
         else {
             const icon = this.shadowRoot.getElementById("icon");
@@ -138,15 +137,17 @@ export class ElectronTitlebar extends HTMLElement {
         this.addClassList(this.maximize, "hidden", isMaximized);
     }
     showTitlebar(show) {
-        const icon = this.shadowRoot.getElementById("icon");
-        const dragregion = this.shadowRoot.getElementById("dragregion");
-        this.addClassList(icon, "forceHidden", !show);
-        this.addClassList(dragregion, "forceHidden", !show);
-        this.addClassList(this.minimize, "forceHidden", !show);
-        this.addClassList(this.maximize, "forceHidden", !show);
-        this.addClassList(this.restore, "forceHidden", !show);
-        this.addClassList(this.close, "forceHidden", !show);
-        this.addClassList(this.titlebar, "none", !show);
+        if (!show || !this.getAttribute("no-titlebar")) {
+            const icon = this.shadowRoot.getElementById("icon");
+            const dragregion = this.shadowRoot.getElementById("dragregion");
+            this.addClassList(icon, "forceHidden", !show);
+            this.addClassList(dragregion, "forceHidden", !show);
+            this.addClassList(this.minimize, "forceHidden", !show);
+            this.addClassList(this.maximize, "forceHidden", !show);
+            this.addClassList(this.restore, "forceHidden", !show);
+            this.addClassList(this.close, "forceHidden", !show);
+            this.addClassList(this.titlebar, "none", !show);
+        }
     }
     addClassList(element, cls, add) {
         if (add)
