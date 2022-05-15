@@ -74,6 +74,9 @@ export class ElectronTitlebar extends HTMLElement {
                 .hidden {
                     display: none;
                 }
+                .forceHidden {
+                    display: none!;
+                }
             </style>
             <div id="titlebar">
                 <img id="icon">
@@ -83,6 +86,7 @@ export class ElectronTitlebar extends HTMLElement {
                 </div>
                 <div id="minimize" class="button"><span class="dash">&#x2012;</span></div>
                 <div id="maximize" class="button"><span>&#9744;</span></div>                
+                <div id="restore" class="button hidden"><span>&boxbox;</span></div>                
                 <div id="close" class="button close"><span>&#10005;</span></div>
             </div>
         `;
@@ -92,11 +96,12 @@ export class ElectronTitlebar extends HTMLElement {
         title.innerText = this.getAttribute("window-title") ?? "";
         this.minimize = this.shadowRoot.getElementById("minimize");
         this.maximize = this.shadowRoot.getElementById("maximize");
+        this.restore = this.shadowRoot.getElementById("restore");
         this.close = this.shadowRoot.getElementById("close");
         this.titlebar.classList.add("focused");
         const notitlebar = this.getAttribute("no-titlebar");
         if (notitlebar)
-            this.disableTitlebar();
+            this.showTitlebar(false);
         else {
             const icon = this.shadowRoot.getElementById("icon");
             icon.src = this.getAttribute("icon") ?? "";
@@ -108,7 +113,7 @@ export class ElectronTitlebar extends HTMLElement {
     attributeChangedCallback(attributeName) {
         switch (attributeName) {
             case "no-titlebar":
-                this.disableTitlebar();
+                this.showTitlebar(false);
                 break;
             case "icon":
                 const icon = this.shadowRoot.getElementById("icon");
@@ -117,9 +122,10 @@ export class ElectronTitlebar extends HTMLElement {
         }
     }
     connectedCallback() {
-        this.close.addEventListener("click", () => close());
-        this.maximize.addEventListener("click", () => this.dispatchEvent(new CustomEvent('onMaximize')));
-        this.minimize.addEventListener("click", () => this.dispatchEvent(new CustomEvent('onMinimize')));
+        this.close.addEventListener("click", () => this.dispatchEvent(new CustomEvent('onclose')));
+        this.maximize.addEventListener("click", () => this.dispatchEvent(new CustomEvent('onmaximize')));
+        this.restore.addEventListener("click", () => this.dispatchEvent(new CustomEvent('onrestore')));
+        this.minimize.addEventListener("click", () => this.dispatchEvent(new CustomEvent('onminimize')));
     }
     setFocused(hasFocus) {
         if (hasFocus)
@@ -127,15 +133,26 @@ export class ElectronTitlebar extends HTMLElement {
         else
             this.titlebar.classList.remove("focused");
     }
-    disableTitlebar() {
+    setMaximized(isMaximized) {
+        this.addClassList(this.restore, "hidden", isMaximized);
+        this.addClassList(this.maximize, "hidden", !isMaximized);
+    }
+    showTitlebar(show) {
         const icon = this.shadowRoot.getElementById("icon");
         const dragregion = this.shadowRoot.getElementById("dragregion");
-        icon?.classList.add("hidden");
-        dragregion?.classList.add("hidden");
-        this.minimize.classList.add("hidden");
-        this.maximize.classList.add("hidden");
-        this.close.classList.add("hidden");
-        this.titlebar.classList.add("none");
+        this.addClassList(icon, "forceHidden", !show);
+        this.addClassList(dragregion, "forceHidden", !show);
+        this.addClassList(this.minimize, "forceHidden", !show);
+        this.addClassList(this.maximize, "forceHidden", !show);
+        this.addClassList(this.restore, "forceHidden", !show);
+        this.addClassList(this.close, "forceHidden", !show);
+        this.addClassList(this.titlebar, "none", !show);
+    }
+    addClassList(element, cls, add) {
+        if (add)
+            element?.classList.add(cls);
+        else
+            element?.classList.remove(cls);
     }
 }
 customElements.define('electron-titlebar', ElectronTitlebar);
